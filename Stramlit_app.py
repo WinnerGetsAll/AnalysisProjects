@@ -162,13 +162,25 @@ joypy.joyplot(df_, by="Year", column="daily_r", ax=ax,
               linewidth=1, legend=False,
               colormap=cm.autumn_r, fade=True)
 
-df = px.data.tips().loc[:, ['sex', 'time', 'size']]
-fig2 = px.parallel_categories(df, color="size", labels={'sex': '性别', 'time': '价格', 'size': '品牌'},
-                              color_continuous_scale=px.colors.sequential.Inferno)
+path = '/Users/winnergetsall/PycharmProjects/Data/query-hive-486841.xlsx'
+
+datas = pd.read_excel(path)
+data = datas.loc[:,
+       ['t1.algorithm_type', 't2.brand_name', 't3.launch_price', 't4.goods_label', 't4.similar_business_name',
+        't4.price']]
+data['launch_cut'] = pd.cut(data['t3.launch_price'], [1000, 3000, 5000, 8000, 10000])
+data['click_price_cut'] = pd.cut(data['t4.price'], [1000, 3000, 5000, 8000, 10000])
+
+fig2 = px.parallel_categories(data, dimensions=['t2.brand_name', 't4.goods_label', 't4.similar_business_name'],
+                              labels={'t2.brand_name': '用户持有品牌', 't4.goods_label': '点击终端类型',
+                                      't4.similar_business_name': '点击品牌'},
+                              color='t4.price', color_continuous_scale=px.colors.sequential.Inferno)
+
 
 df = px.data.gapminder().query("year == 2007").query("continent == 'Europe'")
 df.loc[df['pop'] < 2.e6, 'country'] = 'Other countries'
 fig3 = px.pie(df, values='pop', names='country', title='终端二级类别订单占比')
+fig3.update_traces(hole=.68)
 
 Rd = np.random.RandomState(42)
 data = Rd.randint(1000, size=(10, 3))
@@ -182,14 +194,14 @@ col4.plotly_chart(fig4)
 col5.subheader('访问变化情况')
 col5.pyplot(fig5)
 
-st.subheader('点击率相对提升和平均点击率变化')
+st.subheader('点击率相对提升变化/点击率提升平均变化')
 st.plotly_chart(fig0)
 
 col1, col2 = st.columns(2)
-col1.subheader('曝光Pv、Pvctr详情')
+col1.subheader('曝光Pv/Pvctr详情')
 col1.plotly_chart(fig)
 
-col2.subheader('曝光Uv、Uvctr详情')
+col2.subheader('曝光Uv/Uvctr详情')
 col2.plotly_chart(fig1)
 
 st.subheader('价格品牌偏好')
@@ -200,3 +212,4 @@ col3.subheader('终端二级类别订单占比')
 col3.plotly_chart(fig3)
 col4.subheader('终端二级类别商品销售详情')
 col4.write(data)
+
