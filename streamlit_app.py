@@ -169,7 +169,10 @@ joypy.joyplot(df_, by="Year", column="daily_r", ax=ax,
               linewidth=1, legend=False,
               colormap=cm.autumn_r, fade=True)
 
-base_dir2 = os.path.dirname(os.path.abspath(__file__))
+try:
+	base_dir2 = os.path.dirname(os.path.abspath(__file__))
+except NameError:
+	base_dir2 = os.getcwd()
 file_path2 = os.path.join(base_dir2, 'query-hive-486841.xlsx')
 
 datas = pd.read_excel(file_path2)
