@@ -1,4 +1,4 @@
-# encodeing by UTF8
+# Encodeing by UTF8
 try:
 	import pandas as pd
 	import numpy as np
@@ -12,11 +12,14 @@ try:
 	from matplotlib import cm
 	import datetime
 	import pandas_datareader as pdr
+	import os
 except ModuleNotFoundError as e:
 	print(e)
 
-path = '/Users/winnergetsall/PycharmProjects/pythonProject3/query-hive-451961.xlsx'
-sourcedata = pd.read_excel(path, index_col='dt')
+base_dir1 = os.path.dirname(os.path.abspath(__file__))
+file_path1 = os.path.join(base_dir1, 'query-hive-451961.xlsx')
+
+sourcedata = pd.read_excel(file_path1)
 table = pd.pivot_table(sourcedata, index=['model_id', 'dt'], values=['click_uv', 'expose_uv', 'click_pv', 'expose_pv'],
                        aggfunc='sum')
 table['uvctr'] = table['click_uv'] / table['expose_uv']
@@ -162,9 +165,10 @@ joypy.joyplot(df_, by="Year", column="daily_r", ax=ax,
               linewidth=1, legend=False,
               colormap=cm.autumn_r, fade=True)
 
-path = '/pythonProject5/query-hive-486841.xlsx'
+base_dir2 = os.path.dirname(os.path.abspath(__file__))
+file_path2 = os.path.join(base_dir2, 'query-hive-486841.xlsx')
 
-datas = pd.read_excel(path)
+datas = pd.read_excel(file_path2)
 data = datas.loc[:,
        ['t1.algorithm_type', 't2.brand_name', 't3.launch_price', 't4.goods_label', 't4.similar_business_name',
         't4.price']]
