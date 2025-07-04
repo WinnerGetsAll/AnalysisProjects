@@ -162,7 +162,7 @@ joypy.joyplot(df_, by="Year", column="daily_r", ax=ax,
               linewidth=1, legend=False,
               colormap=cm.autumn_r, fade=True)
 
-path = '/Users/winnergetsall/PycharmProjects/Data/query-hive-486841.xlsx'
+path = '/pythonProject5/query-hive-486841.xlsx'
 
 datas = pd.read_excel(path)
 data = datas.loc[:,
