@@ -13,10 +13,14 @@ try:
 	import datetime
 	import pandas_datareader as pdr
 	import os
+	import sys
 except ModuleNotFoundError as e:
 	print(e)
 
-base_dir1 = os.path.dirname(os.path.abspath(__file__))
+try:
+	base_dir1 = os.path.dirname(os.path.abspath(__file__))
+except NameError:
+	base_dir1 = os.getcwd()
 file_path1 = os.path.join(base_dir1, 'query-hive-451961.xlsx')
 
 sourcedata = pd.read_excel(file_path1)
