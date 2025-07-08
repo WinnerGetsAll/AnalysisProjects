@@ -14,16 +14,19 @@ try:
 	import pandas_datareader as pdr
 	import os
 	import sys
+	import requests
+	from io import BytesIO
+	import openpyxl
 except ModuleNotFoundError as e:
 	print(e)
 
-try:
-	base_dir1 = os.path.dirname(os.path.abspath(__file__))
-except NameError:
-	base_dir1 = os.getcwd()
-file_path1 = os.path.join(base_dir1, 'query-hive-451961.xlsx')
+url = 'https://raw.githubusercontent.com/WinnerGetsAll/AnalysisProjects/ccb277ee9dab8b15c0235e957436eca2a116e345/query-hive-451961.xlsx'
+response = requests.get(url)
+response.raise_for_status()
+print(response.content[:100])
+excel_data = BytesIO(response.content)
+sourcedata = pd.read_excel(excel_data, engine='openpyxl')
 
-sourcedata = pd.read_excel(file_path1)
 table = pd.pivot_table(sourcedata, index=['model_id', 'dt'], values=['click_uv', 'expose_uv', 'click_pv', 'expose_pv'],
                        aggfunc='sum')
 table['uvctr'] = table['click_uv'] / table['expose_uv']
@@ -169,18 +172,16 @@ joypy.joyplot(df_, by="Year", column="daily_r", ax=ax,
               linewidth=1, legend=False,
               colormap=cm.autumn_r, fade=True)
 
-try:
-	base_dir2 = os.path.dirname(os.path.abspath(__file__))
-except NameError:
-	base_dir2 = os.getcwd()
-file_path2 = os.path.join(base_dir2, 'query-hive-486841.xlsx')
+url1 = 'https://raw.githubusercontent.com/WinnerGetsAll/AnalysisProjects/ccb277ee9dab8b15c0235e957436eca2a116e345/query-hive-486841.xlsx'
+response = requests.get(url1)
+response.raise_for_status()
+print(response.content[:100])
+excel_data = BytesIO(response.content)
+datas = pd.read_excel(excel_data, engine='openpyxl')
 
-datas = pd.read_excel(file_path2)
 data = datas.loc[:,
        ['t1.algorithm_type', 't2.brand_name', 't3.launch_price', 't4.goods_label', 't4.similar_business_name',
         't4.price']]
-data['launch_cut'] = pd.cut(data['t3.launch_price'], [1000, 3000, 5000, 8000, 10000])
-data['click_price_cut'] = pd.cut(data['t4.price'], [1000, 3000, 5000, 8000, 10000])
 
 fig2 = px.parallel_categories(data, dimensions=['t2.brand_name', 't4.goods_label', 't4.similar_business_name'],
                               labels={'t2.brand_name': '用户持有品牌', 't4.goods_label': '点击终端类型',
@@ -223,4 +224,3 @@ col3.subheader('终端二级类别订单占比')
 col3.plotly_chart(fig3)
 col4.subheader('终端二级类别商品销售详情')
 col4.write(data)
-
