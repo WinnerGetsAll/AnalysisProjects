@@ -14,14 +14,14 @@ try:
 	import pandas_datareader as pdr
 	import os
 	import sys
-	import requests as req
+	import requests
 	from io import BytesIO
 	import openpyxl
 except ModuleNotFoundError as e:
 	print(e)
 
 url = 'https://raw.githubusercontent.com/WinnerGetsAll/AnalysisProjects/ccb277ee9dab8b15c0235e957436eca2a116e345/query-hive-451961.xlsx'
-response = req.get(url)
+response = requests.get(url)
 response.raise_for_status()
 print(response.content[:100])
 excel_data = BytesIO(response.content)
@@ -173,7 +173,7 @@ joypy.joyplot(df_, by="Year", column="daily_r", ax=ax,
               colormap=cm.autumn_r, fade=True)
 
 url1 = 'https://raw.githubusercontent.com/WinnerGetsAll/AnalysisProjects/ccb277ee9dab8b15c0235e957436eca2a116e345/query-hive-486841.xlsx'
-response = req.get(url1)
+response = requests.get(url1)
 response.raise_for_status()
 print(response.content[:100])
 excel_data = BytesIO(response.content)
